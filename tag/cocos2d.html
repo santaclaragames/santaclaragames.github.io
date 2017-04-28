@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <title>Santa Clara Games | articles tagged "cocos2d"</title>
+    <link rel="shortcut icon" type="image/png" href="/favicon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/theme/css/screen.css" type="text/css" />
+    <link rel="stylesheet" href="/theme/css/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="/theme/css/print.css" type="text/css" media="print" />
+    <meta name="generator" content="Pelican" />
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li class="ephemeral selected"><a href="/tag/cocos2d.html">cocos2d</a></li>
+                <li><a href="">Home</a></li>
+            </ul>
+        </nav>
+        <div class="header_box">
+            <h1><a href="">Santa Clara Games</a></h1>
+        </div>
+    </header>
+    <div id="wrapper">
+        <div id="content">            <h4 class="date">dic 10, 2013</h4>
+
+            <article class="post">
+                <h2 class="title">
+                    <a href="/2013/12/10/pixel-perfect-using-cocos2d-html5/" rel="bookmark" title="Permanent Link to &quot;Pixel Perfect using Cocos2D-HTML5&quot;">Pixel Perfect using Cocos2D-HTML5</a>
+                </h2>
+
+                <p>As soon as we started developing "Hassleheart", we had to make sure we
+could use pixel-perfect sprites in Cocos2D HTML5 and make it as painless
+as possible.</p>
+<p>The basic pixel-perfect challenge comes with making sure Cocos2d doesn't
+apply antialias effects to your textures. Thankfully, this can be easily
+done by invoking the <em>setAliasTexParameters()</em> function after you create
+a Sprite. A piece of cake, right?<br>
+<!--more--><br>
+Well, in the end, we didn't like this solution too much, finding it
+impractical to expect programmers to remember to call this function
+every time they create a sprite. I know myself enough not to trust me.
+ Sooner or later, I would forget to do this, and the game would look all
+fuzzy.</p>
+<p>Another solution could be to extend the <em>cc.Sprite</em> initialize method in
+order to use call the <em>setAliasTexParameters</em> function after the sprite
+is created. Example:</p>
+<p>~~~~ {.prettyprint .lang-js .linenums}
+var myCCSprite = cc.Sprite.extend({
+  initWithSpriteFrame: function ( texture ) {
+    this._super();
+    this.getTexture().setAliasTexParameters();
+  } 
+});</p>
+<div class="highlight"><pre><span></span><span class="nx">This</span> <span class="nx">way</span><span class="p">,</span> <span class="nx">we</span> <span class="nx">extend</span> <span class="nx">the</span> <span class="nx">original</span> <span class="nx">CCSprite</span> <span class="kr">class</span> <span class="nx">and</span> <span class="nx">use</span> <span class="nx">only</span> <span class="nx">the</span>
+<span class="nx">myCCSprite</span> <span class="kr">class</span> <span class="nx">to</span> <span class="nx">create</span> <span class="nx">our</span> <span class="nx">sprites</span><span class="p">.</span> <span class="nx">All</span> <span class="nx">done</span><span class="p">,</span> <span class="nx">right</span><span class="o">?</span> <span class="err"> </span><span class="nx">Well</span><span class="p">,</span> <span class="nx">not</span>
+<span class="nx">quite</span><span class="p">.</span> <span class="nx">What</span> <span class="nx">about</span> <span class="nx">other</span> <span class="nx">Cocos</span> <span class="mi">2</span><span class="nx">D</span> <span class="nx">classes</span> <span class="nx">such</span> <span class="kr">as</span> <span class="nx">cc</span><span class="p">.</span><span class="nx">SpriteFrameCache</span> <span class="nx">or</span>
+<span class="nx">cc</span><span class="p">.</span><span class="nx">SpriteBatchNode</span><span class="o">?</span> <span class="nx">They</span> <span class="nx">still</span> <span class="nx">use</span> <span class="nx">the</span> <span class="nx">original</span> <span class="nx">cc</span><span class="p">.</span><span class="nx">Sprite</span> <span class="kr">class</span><span class="p">,</span> <span class="nx">knowing</span>
+<span class="nx">nothing</span> <span class="nx">about</span> <span class="nx">our</span> <span class="nx">myCCSprite</span> <span class="nx">extension</span> <span class="o">:</span><span class="p">,(</span>
+
+<span class="nx">Another</span> <span class="nx">approach</span> <span class="nx">could</span> <span class="nx">be</span> <span class="nx">to</span> <span class="nx">patch</span> <span class="nx">the</span> <span class="nx">CCSprite</span><span class="p">.</span><span class="nx">js</span> <span class="nx">file</span>
+<span class="nx">directly</span><span class="p">,</span><span class="err"> </span><span class="nx">modifying</span> <span class="nx">its</span> <span class="nx">initializer</span> <span class="nx">method</span><span class="p">.</span> <span class="nx">But</span> <span class="nx">that</span> <span class="nx">would</span> <span class="nx">be</span> <span class="nx">far</span> <span class="nx">from</span>
+<span class="nx">elegant</span><span class="p">,</span> <span class="nx">hardcoding</span> <span class="nx">the</span> <span class="nx">assumption</span> <span class="nx">that</span> <span class="nx">all</span> <span class="nx">games</span> <span class="nx">are</span> <span class="nx">to</span> <span class="nx">be</span>
+<span class="nx">pixel</span><span class="o">-</span><span class="nx">perfect</span> <span class="nx">and</span> <span class="nx">forcing</span> <span class="nx">us</span> <span class="nx">to</span> <span class="nx">merge</span> <span class="k">this</span> <span class="nx">change</span> <span class="nx">any</span> <span class="nx">time</span> <span class="nx">the</span> <span class="nx">Cocos2D</span>
+<span class="nx">team</span> <span class="nx">releases</span> <span class="nx">a</span> <span class="k">new</span> <span class="nx">version</span><span class="p">.</span>
+
+<span class="nx">The</span> <span class="nx">last</span> <span class="nx">and</span> <span class="nx">most</span> <span class="nx">optimal</span> <span class="nx">approach</span> <span class="nx">involved</span> <span class="nx">modifying</span> <span class="nx">the</span> <span class="nx">initializer</span>
+<span class="kd">function</span> <span class="nx">at</span> <span class="nx">runtime</span> <span class="nx">like</span> <span class="k">this</span><span class="o">:</span>
+
+<span class="o">~~~~</span> <span class="p">{.</span><span class="nx">prettyprint</span> <span class="p">.</span><span class="nx">lang</span><span class="o">-</span><span class="nx">js</span> <span class="p">.</span><span class="nx">linenums</span><span class="p">}</span>
+<span class="kd">var</span> <span class="nx">__CCSprite_initWithSpriteFrame</span> <span class="o">=</span> <span class="nx">cc</span><span class="p">.</span><span class="nx">Sprite</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">initWithSpriteFrame</span><span class="p">;</span>
+<span class="nx">cc</span><span class="p">.</span><span class="nx">Sprite</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">initWithSpriteFrame</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">ret</span> <span class="o">=</span> <span class="nx">__CCSprite_initWithSpriteFrame</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span>
+
+  <span class="k">if</span> <span class="p">(</span> <span class="nx">ret</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">getTexture</span><span class="p">().</span><span class="nx">setAliasTexParameters</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="nx">ret</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+
+
+<p>By extending the original instance method and building on its prototype,
+we are able to achieve the most elegant solution because we avoid
+modifying the original implementation.  Now, if Cocos2D changes its
+implementation, our code will still support it, while at the same time,
+we ensure that any Cocos2D class that uses cc.Sprite class will be
+passing through our extended prototyping of the initWithSpriteFrame
+method.</p>
+                <div class="clear"></div>
+
+                <div class="info">
+                    <a href="/2013/12/10/pixel-perfect-using-cocos2d-html5/">posted at 18:30</a>
+                    &nbsp;&middot;&nbsp;<a href="/category/programming.html" rel="tag">programming</a>
+                    &nbsp;&middot;
+                    &nbsp;<a href="/tag/cocos2d.html" class="tags selected">cocos2d</a>
+                    &nbsp;<a href="/tag/html5.html" class="tags">html5</a>
+                    &nbsp;<a href="/tag/javascript.html" class="tags">javascript</a>
+                    &nbsp;<a href="/tag/pixel-perfect.html" class="tags">pixel perfect</a>
+                    &nbsp;<a href="/tag/textures.html" class="tags">textures</a>
+                </div>
+            </article>
+
+            <div class="clear"></div>
+            <footer>
+                <p>
+                <a href="https://github.com/jody-frankowski/blue-penguin">Blue Penguin</a> Theme
+                &middot;
+                Powered by <a href="http://getpelican.com">Pelican</a>
+            </footer>
+        </div>
+        <div class="clear"></div>
+    </div>
+</body>
+</html>
